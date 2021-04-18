@@ -1,6 +1,10 @@
 require "test_helper"
 
 class UsersSignUpTest < ActionDispatch::IntegrationTest
+	def setup
+		ActionMailer::Base.deliveries.clear
+	end
+
   test "invalid sign up information" do
     get sign_up_path
     assert_no_difference 'User.count' do
@@ -18,13 +22,14 @@ class UsersSignUpTest < ActionDispatch::IntegrationTest
 		assert_template 'users/new'
 		assert_select "div#error_explanation"
 		assert_select "div.alert.alert-danger"
+		assert_select 'div.field_with_errors'
 		assert_select "li", "Name can't be blank"
 		assert_select "li", "Email is invalid"
 		assert_select "li", "Password confirmation doesn't match Password"
 		assert_select "li", "Password is too short (minimum is 6 characters)"
   end
 
-  test "valid sign up information" do
+  test "valid signup information with account activation" do
 		get sign_up_path
 		assert_difference 'User.count', 1 do
 			post users_path, 
@@ -37,9 +42,24 @@ class UsersSignUpTest < ActionDispatch::IntegrationTest
 				} 
 			}
 		end
+		assert_equal 1, ActionMailer::Base.deliveries.size
+		user = assigns(:user)
+		assert_not user.activated?
+		# Try to log in before activation.
+		log_in_as(user)
+		assert_not is_logged_in?
+		# Invalid activation token
+		get edit_account_activation_path("invalid token", email: user.email)
+		assert_not is_logged_in?
+		# Valid token, wrong email
+		get edit_account_activation_path(user.activation_token, email: 'wrong')
+		assert_not is_logged_in?
+		# Valid activation token
+		get edit_account_activation_path(user.activation_token, email: user.email)
+		assert user.reload.activated?
 		follow_redirect!
-		# assert_template 'users/show'
+		assert_template 'users/show'
 		assert_not flash.blank? 
-		# assert is_logged_in?
+		assert is_logged_in?
 	end
 end
