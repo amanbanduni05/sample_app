@@ -71,12 +71,12 @@ Rails.application.configure do
   host = 'aqueous-taiga-98849.herokuapp.com'
   config.action_mailer.default_url_options = { host: host }
   ActionMailer::Base.smtp_settings = {
-    :address => 'smtp.sendgrid.net',
+    :address => 'smtp-relay.sendinblue.com',
     :port => '587',
     :authentication => :plain,
-    :user_name => ENV['SENDGRID_USERNAME'],
-    :password => ENV['SENDGRID_PASSWORD'],
-    :domain => 'heroku.com',
+    :user_name => "aman@clanconnect.ai",
+    :password => "4JATbCwfBa2hyLs3",
+    :domain => 'sendinblue.com',
     :enable_starttls_auto => true
   }
 
