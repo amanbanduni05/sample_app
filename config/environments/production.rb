@@ -76,7 +76,7 @@ Rails.application.configure do
     :authentication => :plain,
     :user_name => "aman@clanconnect.ai",
     :password => "4JATbCwfBa2hyLs3",
-    :domain => 'heroku.com',
+    :domain => 'sendinblue.com',
     :enable_starttls_auto => true
   }
 
