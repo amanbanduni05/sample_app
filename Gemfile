@@ -5,6 +5,11 @@ ruby '2.7.2'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
 gem 'rails', '~> 6.1.3'
+# Adding gems for image processing
+gem 'image_processing', '1.9.3'
+gem 'mini_magick',  '4.9.5' 
+# Adding a gem for Active Storage Validations
+gem 'active_storage_validations', '0.8.2'
 # Adding bcrypt gem for password authentication
 gem 'bcrypt', '3.1.13'
 # Adding Bootstrap gem for styling
@@ -63,6 +68,10 @@ group :test do
   gem 'minitest-reporters',       '1.3.8'
   gem 'guard',                    '2.16.2'
   gem 'guard-minitest',           '2.4.6'
+end
+
+group :production do
+  gem 'aws-sdk-s3', '1.46.0', require: false
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
